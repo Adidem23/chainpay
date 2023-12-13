@@ -6,5 +6,6 @@ This was our project for the ETHINDIA HAckathon where We Have tried to Integrate
 - Typescript
 - Safe Wallet for Account Abstraction
 - One Inch API for DEX
-- LightHouse SDK for Storing
-- 
+- LightHouse SDK for Decentralized Storing
+
+# Video Link : 

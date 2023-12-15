@@ -10,3 +10,6 @@ This was our project for the ETHINDIA HAckathon where We Have tried to Integrate
 
 # Video Link : 
 https://youtu.be/36poMhZ-C40
+
+# Deployed Site Link : 
+https://chainpay-adidem23.vercel.app/

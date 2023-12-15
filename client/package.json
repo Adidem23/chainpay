@@ -9,15 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "antd": "^5.12.1",
-    "next": "14.0.4",
-    "react": "^18",
-    "react-dom": "^18",
-<<<<<<< HEAD
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@monerium/sdk": "^2.8.0",
     "@mui/material": "^5.14.20",
+    "@pushprotocol/restapi": "^1.4.45",
+    "@pushprotocol/socket": "^0.5.3",
     "@safe-global/api-kit": "^2.0.0",
     "@safe-global/auth-kit": "^2.0.0",
     "@safe-global/onramp-kit": "^2.0.0",
@@ -26,13 +23,22 @@
     "@safe-global/safe-react-components": "^2.0.6",
     "@waku/react": "^0.0.5-63a782d",
     "@waku/sdk": "^0.0.20",
-    "@web3auth/safeauth-embed": "^0.0.0",
-    "react-router-dom": "^6.20.1",
+    "@hookform/resolvers": "^3.3.2",
+    "@metamask/providers": "^14.0.2",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-slot": "^1.0.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "lucide-react": "^0.294.0",
+    "antd": "^5.12.1",
+    "dotenv": "^16.3.1",
+    "ethers": "^5.7.2",
+    "next": "14.0.4",
     "protobufjs": "^7.2.5",
-    "dotenv": "^16.3.1"
-=======
+    "react": "^18",
+    "react-dom": "^18",
+    "react-router-dom": "^6.20.1",
     "zustand": "^4.4.7"
->>>>>>> main
   },
   "devDependencies": {
     "@types/node": "^20",

@@ -8,7 +8,8 @@ import {
 } from '@safe-global/auth-kit'
 import {EthHashInfo} from '@safe-global/safe-react-components'
 import Safe, {EthersAdapter} from '@safe-global/protocol-kit'
-import {ethers, BrowserProvider, Eip1193Provider} from 'ethers';
+import { ethers } from 'ethers';
+import {BrowserProvider, Eip1193Provider} from 'ethers';
 import { getSafeTxV4TypedData, getTypedData, getV3TypedData } from './typedData'
 import { Box, Button, Divider, Grid, Typography } from '@mui/material'
 import {createTheme} from '@mui/system';
@@ -19,8 +20,8 @@ import cn from './utils/cn'
 import ModeIndicator from './components/ModeIndicator'
 import CustomerInfo from './components/CustomerInfo'
 
+import { Carousel, Image, Modal } from 'antd';
 import Banner from './components/Banner';
-
 
 const page = () => {
 
@@ -35,8 +36,11 @@ const page = () => {
   const [consoleMessage, setConsoleMessage] = useState<string>('')
   const [consoleTitle, setConsoleTitle] = useState<string>('')
   const [provider, setProvider] = useState<BrowserProvider>()
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-<<<<<<< HEAD
+
   useEffect(() => {
     // @ts-expect-error - Missing globals
     const params = new URL(window.document.location).searchParams
@@ -116,9 +120,65 @@ const logout = async () => {
   setSafeAuthSignInResponse(null)
 }
 
+const getUserInfo = async () => {
+  const userInfo = await safeAuthPack?.getUserInfo()
 
-=======
->>>>>>> main
+  uiConsole('User Info', userInfo)
+}
+
+const getAccounts = async () => {
+  const accounts = await provider?.send('eth_accounts', [])
+
+  uiConsole('Accounts', accounts)
+}
+
+const getChainId = async () => {
+  const chainId = await provider?.send('eth_chainId', [])
+     
+  uiConsole('ChainId', chainId)
+}
+
+const signAndExecuteSafeTx = async (index: number) => {
+  const safeAddress = safeAuthSignInResponse?.safes?.[index] || '0x'
+
+  // Wrap Web3Auth provider with ethers
+  const provider = new BrowserProvider(safeAuthPack?.getProvider() as Eip1193Provider)
+  const signer = await provider.getSigner()
+  const ethAdapter = new EthersAdapter({
+    ethers,
+    signerOrProvider: signer
+  })
+  const protocolKit = await Safe.create({
+    safeAddress,
+    ethAdapter
+  })
+
+  // Create transaction
+  let tx = await protocolKit.createTransaction({
+    transactions: [
+      {
+        to: ethers.getAddress(safeAuthSignInResponse?.eoa || '0x'),
+        data: '0x',
+        value: ethers.parseUnits('0.0001', 'ether').toString()
+      }
+    ]
+  })
+
+  // Sign transaction. Not necessary to execute the transaction if the threshold is one
+  // but kept to test the sign transaction modal
+  tx = await protocolKit.signTransaction(tx)
+
+  // Execute transaction
+  const txResult = await protocolKit.executeTransaction(tx)
+  uiConsole('Safe Transaction Result', txResult)
+}
+
+const uiConsole = (title: string, message: unknown) => {
+  setConsoleTitle(title)
+  setConsoleMessage(typeof message === 'string' ? message : JSON.stringify(message, null, 2))
+}
+
+
   return (
     <div className='flex flex-wrap flex-row w-full h-full'>
 
@@ -130,20 +190,73 @@ const logout = async () => {
           <img src='/logos/chainpay-logo.png' width='37' />
           Chainpay
 {/* @ts-ignore */}
-<Box mr={5}>
+      <Box mr={5}>
         {!!safeAuthPack?.isAuthenticated ? (
+          <>
+          <div className='flex flex-row items-center w-auto h-auto'>
           <Box display="flex" alignItems="center">
-            
             <Button variant="contained" onClick={logout} sx={{ ml: 2 }}>
               Log Out
             </Button>
           </Box>
+          <Button onClick={handleOpen}>Open modal</Button>
+          </div>
+
+          <Modal
+            open={open}
+            onCancel={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box>
+            <Button
+              variant="contained"
+              fullWidth
+              color="secondary"
+              sx={{ my: 1 }}
+              onClick={() => getUserInfo()}
+            >
+              getUserInfo
+            </Button>
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              sx={{ my: 1 }}
+              onClick={() => getChainId()}
+            >
+              eth_chainId
+            </Button>
+              <Typography variant="body1" color="primary" fontWeight={700}>
+              {consoleTitle}
+            </Typography>
+            <Typography
+              variant="body1"
+              color="secondary"
+              sx={{ mt: 2, overflowWrap: 'break-word' }}
+            >
+
+              {consoleMessage}
+              {/* <div>Name: {consoleMessage.('name')} </div>
+              <img src={consoleMessage).profileImage} alt="" />
+              <div>Email: {consoleMessage).email} </div>
+              <div>Verifier: {JSON.parse(consoleMessage).verifier}</div>
+              <div>VerifierID: {JSON.parse(consoleMessage).verifierId}</div>
+              <div>Verifier Params: {consoleMessage)verifierParams}</div>
+              <div>Type of Login: {consoleMessage)typeOfLogin}</div> */}
+              
+            </Typography>
+            </Box>
+          </Modal>
+          </>
         ) : (
           <Button variant="contained" onClick={login}>
             Login
           </Button>
         )}
       </Box>
+
+      
         </div>
 
         <ModeIndicator />

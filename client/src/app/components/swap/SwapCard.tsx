@@ -2,7 +2,11 @@ import React from 'react'
 
 import { Select } from 'antd'
 
-const SwapCard = ({from}) => {
+interface SwapCardProps {
+    from: boolean
+}
+
+const SwapCard: React.FC<SwapCardProps> = ({from}) => {
 
     const chains = ['']
 
